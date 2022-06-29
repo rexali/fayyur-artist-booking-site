@@ -14,7 +14,7 @@ from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
-from flask_wtf.csrf import CsrfProtect
+# from flask_wtf.csrf import CsrfProtect
 from forms import *
 from sqlalchemy import create_engine
 #----------------------------------------------------------------------------#
@@ -859,7 +859,7 @@ def edit_venue_submission(venue_id):
     # TODO: take values from the form submitted, and update existing
     # venue record with ID <venue_id> using the new attributes
 
-     error = False
+    error = False
 
     # Get data
     name = request.form['name']
@@ -933,76 +933,6 @@ def create_artist_form():
 
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
-    error = False
-    form = ArtistForm()
-
-    # Form validation
-    if not form.validate():
-        for fieldName, errorMessages in form.errors.items():
-            show_form_errors(fieldName, errorMessages)
-
-        return redirect(url_for('create_artist_form'))
-
-    # Get data
-    name = request.form['name']
-    city = request.form['city']
-    state = request.form['state']
-    phone = request.form['phone']
-    genres = request.form.getlist('genres')
-    image_link = request.form['image_link']
-    facebook_link = request.form['facebook_link']
-    website = request.form['website']
-    seeking_venue = True if 'seeking_venue' in request.form else False
-    seeking_description = request.form['seeking_description']
-
-    try:
-        # Create model
-        artist = Artist(
-          name=name,
-          city=city,
-          state=state,
-          phone=phone,
-          genres=genres,
-          image_link=image_link,
-          facebook_link=facebook_link,
-          website=website,
-          seeking_venue=seeking_venue,
-          seeking_description=seeking_description,
-        )
-
-        # Update DB
-        db.session.add(artist)
-        db.session.commit()
-    except Exception:
-        error = True
-        db.session.rollback()
-        print(sys.exc_info())
-    finally:
-        db.session.close()
-
-    # Show banner
-    if error:
-        abort(400)
-        flash(
-          'An error occurred. Artist '
-          + name
-          + ' could not be listed.',
-          'danger'
-        )
-    if not error:
-        flash(
-          'Artist '
-          + name
-          + ' was successfully listed!',
-          'success'
-        )
-
-   # return render_template('pages/home.html')
-    return render_template('forms/new_artist.html', form=form)
-
-
-@app.route('/artists/create', methods=['POST'])
-def create_artist_submission():
     # called upon submitting the new artist listing form
     # TODO: insert form data as a new Venue record in the db, instead
     error = False
@@ -1028,7 +958,7 @@ def create_artist_submission():
     seeking_venue = True if 'seeking_venue' in request.form else False
     seeking_description = request.form['seeking_description']
 
-     try:
+    try:
         # Create model
         artist = Artist(
           name=name,
