@@ -15,7 +15,6 @@ import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import VenueForm, ArtistForm, ShowForm
-# from flask_wtf.csrf import CsrfProtect
 from forms import *
 
 #----------------------------------------------------------------------------#
@@ -111,19 +110,6 @@ def format_datetime(value, format='medium'):
 
 
 app.jinja_env.filters['datetime'] = format_datetime
-
-
-#----------------------------------------------------------------------------#
-# Show Errors.
-#----------------------------------------------------------------------------#
-def show_form_errors(fieldName, errorMessages):
-    return flash(
-        'Some errors on ' +
-        fieldName.replace('_', ' ') +
-        ': ' +
-        ' '.join([str(message) for message in errorMessages]),
-        'warning'
-    )
 
 #----------------------------------------------------------------------------#
 # Controllers
@@ -353,14 +339,16 @@ def create_venue_submission():
     return render_template('pages/home.html')
 
 
-@app.route('/venues/<venue_id>', methods=['DELETE'])
+@app.route('/venues/<venue_id>/delete', methods=['GET'])
 def delete_venue(venue_id):
     # TODO: Complete this endpoint for taking a venue_id, and using
     # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
+    # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
+    # clicking that button delete it from the db then redirect the user to the homepage
     error = False
-
     try:
-        Venue.query.filter_by(id=venue_id).delete()
+        Venue.query.filter_by(id= int(venue_id)).delete()
+        # db.session.delete(venue)
         db.session.commit()
     except Exception as e:
         error = True
@@ -377,16 +365,15 @@ def delete_venue(venue_id):
           'danger'
         )
         abort()
+
     if not error:
         flash(
           'Venue was successfully deleted!',
           'success'
         )
 
-    # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
-    # clicking that button delete it from the db then redirect the user to the homepage
-    return None
-    # return render_template('pages/home.html')
+    
+    return render_template('pages/home.html')
 
 #  Artists
 #  ----------------------------------------------------------------
@@ -422,16 +409,8 @@ def search_artists():
     # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
     # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
     # search for "band" should return "The Wild Sax Band".
-    response = {
-        "count": 1,
-        "data": [{
-            "id": 4,
-            "name": "Guns N Petals",
-            "num_upcoming_shows": 0,
-        }]
-    }
 
-     # Prepare search data
+    # Prepare search data
     search_term = request.form['search_term']
 
     search = "%{}%".format(search_term)
@@ -521,19 +500,7 @@ def show_artist(artist_id):
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
     form = ArtistForm()
-    # artist = {
-    #     "id": 4,
-    #     "name": "Guns N Petals",
-    #     "genres": ["Rock n Roll"],
-    #     "city": "San Francisco",
-    #     "state": "CA",
-    #     "phone": "326-123-5000",
-    #     "website_link": "https://www.gunsnpetalsband.com",
-    #     "facebook_link": "https://www.facebook.com/GunsNPetals",
-    #     "seeking_venue": True,
-    #     "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
-    #     "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"
-    # }
+
     # TODO: populate form with fields from artist with ID <artist_id>
 
     # Request data

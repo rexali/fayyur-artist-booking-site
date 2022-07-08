@@ -76,6 +76,9 @@
 </section>
 
 <a href="/venues/{{ venue.id }}/edit"><button class="btn btn-primary btn-lg">Edit</button></a>
+<form method="get" action="/venues/{{ venue.id }}/delete" class="form-inline form-horizontal">
+	<input type="submit" value="Delete" class="btn btn-primary btn-lg" />
+</form>
 
 {% endblock %}
 
