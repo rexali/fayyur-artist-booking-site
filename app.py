@@ -170,22 +170,8 @@ def show_venue(venue_id):
                 'start_time': str(show.start_time),
             })
 
-        # Iterate over each upcoming show
-        # for upcoming_show in upcoming_shows:
-        #     artist = Artist.query.filter(Artist.id == upcoming_show.artist_id).first()
-
-        #     # Map upcoming shows
-        #     data_upcoming_shows.append({
-        #         'artist_id': artist.id,
-        #         'artist_name': artist.name,
-        #         'artist_image_link': artist.image_link,
-        #         'start_time': str(upcoming_show.start_time),
-        #     })
-
         # Add shows data
-        # data_venue.upcoming_shows = data_upcoming_shows
         data_venue.upcoming_shows = upcoming_shows
-        # data_venue.upcoming_shows_count = len(data_upcoming_shows)
         data_venue.upcoming_shows_count = len(upcoming_shows)
 
     # Get the past shows of this venue
