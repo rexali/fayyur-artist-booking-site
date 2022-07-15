@@ -38,6 +38,7 @@ migrate = Migrate(app, db)
 # Filters.
 #----------------------------------------------------------------------------#
 
+
 def format_datetime(value, format='medium'):
     date = dateutil.parser.parse(value)
     if format == 'full':
@@ -549,7 +550,7 @@ def edit_artist_submission(artist_id):
     else:
         for field, message in form.errors.items():
             flash(field + ' - ' + str(message), 'danger')
-    return render_template('forms/new_artist.html',form=form)
+    return render_template('forms/new_artist.html', form=form)
 
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
@@ -784,9 +785,13 @@ def create_shows():
 def create_show_submission():
     # called to create new shows in the db, upon submitting new show listing form
     # TODO: insert form data as a new Show record in the db, instead
-    error = False
+
+    form = ShowForm()
     #  validate
     if form.validate_on_submit():
+
+        error = False
+
         # Get data
         artist_id = request.form['artist_id']
         venue_id = request.form['venue_id']
